@@ -26,6 +26,7 @@ class pmlc_nova::compute::config (
   $nova_database_password    = $::pmlc_nova::nova_database_password,
   $neutron_admin_tenant_name = $::pmlc_nova::neutron_admin_tenant_name,
   $nova_conductor_workers    = $::pmlc_nova::nova_conductor_workers,
+  $use_ceph                  = $::pmlc_nova::use_ceph,
   $live_migration_flag       = $::pmlc_nova::live_migration_flag,
   $images_rbd_pool           = $::pmlc_nova::images_rbd_pool,
   $images_type               = $::pmlc_nova::images_type,
@@ -104,12 +105,37 @@ class pmlc_nova::compute::config (
     value   => $live_migration_flag,
   }
 
-  ini_setting { 'images rbd pool':
-    ensure  => 'present',
-    path    => $nova_config,
-    section => 'libvirt',
-    setting => 'images_rbd_pool',
-    value   => $images_rbd_pool,
+  if $use_ceph == true {
+    ini_setting { 'images rbd pool':
+      ensure  => 'present',
+      path    => $nova_config,
+      section => 'libvirt',
+      setting => 'images_rbd_pool',
+      value   => $images_rbd_pool,
+    }
+
+    ini_setting { 'rbd user':
+      ensure  => 'present',
+      path    => $nova_config,
+      section => 'libvirt',
+      setting => 'rbd_user',
+      value   => $rbd_user,
+    }
+  } else {
+    ini_setting { 'images rbd pool':
+      ensure  => 'absent',
+      path    => $nova_config,
+      section => 'libvirt',
+      setting => 'images_rbd_pool',
+    }
+
+    ini_setting { 'rbd user':
+      ensure  => 'absent',
+      path    => $nova_config,
+      section => 'libvirt',
+      setting => 'rbd_user',
+      value   => $rbd_user,
+    }
   }
 
   ini_setting { 'images type':
@@ -120,11 +146,4 @@ class pmlc_nova::compute::config (
     value   => $images_type,
   }
 
-  ini_setting { 'rbd user':
-    ensure  => 'present',
-    path    => $nova_config,
-    section => 'libvirt',
-    setting => 'rbd_user',
-    value   => $rbd_user,
-  }
 }
