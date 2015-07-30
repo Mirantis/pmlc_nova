@@ -29,7 +29,7 @@ class pmlc_nova (
   $neutron_admin_tenant_name = $::pmlc_nova::params::neutron_admin_tenant_name,
   $nova_conductor_workers    = $::pmlc_nova::params::nova_conductor_workers,
   $role                      = undef,
-  $use_ceph                  = true,
+  $use_ceph                  = $::pmlc_nova::params::use_ceph,
   $live_migration_flag       = $::pmlc_nova::params::live_migration_flag,
   $images_rbd_pool           = $::pmlc_nova::params::images_rbd_pool,
   $images_type               = $::pmlc_nova::params::images_type,

@@ -18,7 +18,7 @@ class pmlc_nova::params {
   $neutron_admin_tenant_name = 'services'
   $nova_conductor_workers    = '2'
   $use_ceph                  = true
-  $live_migration_flag       = $::pmlc::use_ceph ? {
+  $live_migration_flag       = $::pmlc_nova::use_ceph ? {
     true  => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST',
     false => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_PERSIST_DEST',
   }
