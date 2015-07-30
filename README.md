@@ -37,7 +37,5 @@ Parameters are optional but you'd likely want to supply different/correct access
 * $nova_conductor_workers    - The number of conductor workers
 * $role                      - [required] The role to apply. Valid values are 'controller' and 'compute'
 * $use_ceph                  - Whether or not to use Ceph for ephemeral storage. Defaults to true
-* $live_migration_flag       - The flag for the migrations setting in nova
 * $images_rbd_pool           - The ceph rbd pool for images
-* $images_type               - The type of images to use. Defaults to rbd
 * $rbd_user                  - The ceph rbd user

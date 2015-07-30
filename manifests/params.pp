@@ -1,7 +1,5 @@
 # Params class
-class pmlc_nova::params (
-  $use_ceph = $::pmlc_nova::use_ceph,
-) inherits ::pmlc_nova {
+class pmlc_nova::params {
   $management_vip            = undef
   $debug                     = False
   $nova_config               = '/etc/nova/nova.conf'
@@ -19,14 +17,9 @@ class pmlc_nova::params (
   $nova_admin_user           = 'nova'
   $neutron_admin_tenant_name = 'services'
   $nova_conductor_workers    = '2'
-  $live_migration_flag       = $use_ceph ? {
-    true  => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST',
-    false => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_PERSIST_DEST',
-  }
+  $use_ceph                  = true
   $images_rbd_pool           = 'compute'
-  $images_type               = $use_ceph ? {
-    true  => 'rbd',
-    false => 'default',
-  }
+  $images_type               = undef
+  $live_migration_flag       = undef
   $rbd_user                  = 'compute'
 }

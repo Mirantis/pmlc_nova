@@ -29,10 +29,8 @@ class pmlc_nova (
   $neutron_admin_tenant_name = $::pmlc_nova::params::neutron_admin_tenant_name,
   $nova_conductor_workers    = $::pmlc_nova::params::nova_conductor_workers,
   $role                      = undef,
-  $use_ceph                  = true,
-  $live_migration_flag       = $::pmlc_nova::params::live_migration_flag,
+  $use_ceph                  = $::pmlc_nova::params::use_ceph,
   $images_rbd_pool           = $::pmlc_nova::params::images_rbd_pool,
-  $images_type               = $::pmlc_nova::params::images_type,
   $rbd_user                  = $::pmlc_nova::params::rbd_user,
 ) inherits pmlc_nova::params {
 
@@ -55,10 +53,20 @@ class pmlc_nova (
   validate_string($role)
   validate_bool($use_ceph)
 
+  $live_migration_flag = $use_ceph ? {
+    true  => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST',
+    false => 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_PERSIST_DEST',
+  }
+  validate_string($live_migration_flag)
+
+  $images_type = $use_ceph ? {
+    true  => 'rbd',
+    false => 'default',
+  }
+  validate_string($images_type)
+
   if $use_ceph == true {
-    validate_string($live_migration_flag)
     validate_string($images_rbd_pool)
-    validate_string($images_type)
     validate_string($rbd_user)
   }
 
